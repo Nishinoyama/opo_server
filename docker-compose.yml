@@ -1,0 +1,64 @@
+version: '3.1'
+services:
+  rails: &app-base
+    build:
+      context: .
+      dockerfile: build/development.Dockerfile
+      args:
+        RAILS_ENV: development
+    command: bundle exec rails server -b 0.0.0.0 -p '3000'
+    ports:
+      - '3000:3000'
+    links:
+      - db
+      - redis
+    environment:
+      LANG: 'C.UTF-8'
+      RAILS_ENV: development
+      SPRING_SOCKET: 'tmp/pids/spring.sock'
+      SPRING_SERVER_COMMAND: 'build-compose up spring'
+      POSTGRES_HOST: db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+#    env_file:
+#      - secrets.env
+    volumes:
+      - .:/rails_app
+      - bundle-data:/usr/local/bundle
+    stdin_open: true
+    tty: true
+
+
+  spring:
+    <<: *app-base
+    ports: []
+    command: bundle exec spring server
+    pid: host
+
+
+
+  db:
+    image: postgres:13.1-alpine
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      PGDATA: /var/lib/postgresql/data
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+
+  redis:
+    image: redis:5.0.7-alpine
+    ports:
+      - '6379:6379'
+    command: [redis-server, --loglevel, notice]
+    volumes:
+      - redis-data:/data
+
+
+volumes:
+  bundle-data: {}
+  postgres-data: {}
+  redis-data: {}
