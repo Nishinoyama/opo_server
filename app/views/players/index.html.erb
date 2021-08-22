@@ -1,0 +1,16 @@
+<header>
+  <h1>
+    OpoServerWeb
+  </h1>
+</header>
+
+<section>
+  <ul>
+    <% @players.each do |p| %>
+      <li>
+        <%= p.name %>
+        <%= link_to "[show]", p %>
+      </li>
+    <% end %>
+  </ul>
+</section>

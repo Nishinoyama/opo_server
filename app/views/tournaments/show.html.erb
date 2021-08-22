@@ -1,0 +1,22 @@
+<header>
+  <h1>
+    OpoServerWeb
+  </h1>
+</header>
+
+<section>
+  <h2>
+    <%= @tournament.name %>
+  </h2>
+  <h3>
+    Participants
+  </h3>
+  <ul>
+    <% @tournament.players.each do |p| %>
+      <li>
+        <%= p.name %>
+        <%= link_to "[show]", p %>
+      </li>
+    <% end %>
+  </ul>
+</section>
