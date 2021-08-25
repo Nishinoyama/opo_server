@@ -7,8 +7,6 @@ class CreateMatchingResults < ActiveRecord::Migration[5.2]
       t.integer :win_count
       t.integer :draw_count
       t.integer :lose_count
-
-      t.timestamps
     end
   end
 end
