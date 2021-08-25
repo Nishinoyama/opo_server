@@ -1,5 +1,5 @@
 class Tournament < ApplicationRecord
   has_many :player_assignments
   has_many :players, through: :player_assignments
-  has_many :matchings
+  has_many :matching_results
 end

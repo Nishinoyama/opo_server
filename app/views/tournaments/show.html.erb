@@ -18,26 +18,35 @@
           <%= p.name %>
           <%= link_to "[show]", p %>
         </div>
-        <% @matchings.select{|m| m.player_id == p.id}.map(&:matching_result).each do |m| %>
-          <div style="display: inline-block; background-color:
-            <%= "#c0efd3" if m.win_count > m.lose_count %>
-            <%= "#eec3c4" if m.win_count < m.lose_count %>
-            <%= "#f3e9cc" if m.win_count == m.lose_count %>
-            ;">
-            <%# OMG! call sql each time!!! SSSHHHIIITTT!!!%>
-            <div style="display: inline; float: left; min-width: 60px; padding-right: 12px;">
-              <%= "O" if m.win_count > m.lose_count %>
-              <%= "X" if m.win_count < m.lose_count %>
-              <%= "-" if m.win_count == m.lose_count %>
-              <%= m.player_id %>
-            </div>
-            <div style="display: inline; margin-right: auto;">
-              <%= m.win_count %>
-              -
-              <%= m.draw_count %>
-              -
-              <%= m.lose_count %>
-            </div>
+        <% @results.select{ |m| m.player_id == p.id }.each do |m| %>
+          <div style="display: inline-block; width: 120px;
+            <% if m.matching_status == 'finished' %>
+            background-color:
+                <%= "#c0efd3" if m.win_count > m.lose_count %>
+                <%= "#eec3c4" if m.win_count < m.lose_count %>
+                <%= "#f3e9cc" if m.win_count == m.lose_count %>
+              ;
+            <% end %>
+          ">
+            <% if m.matching_status == 'finished' %>
+              <div style="display: inline; float: left; min-width: 36px; padding-right: 12px;">
+                <%= "O" if m.win_count > m.lose_count %>
+                <%= "X" if m.win_count < m.lose_count %>
+                <%= "-" if m.win_count == m.lose_count %>
+                <%= m.opponent_id %>
+              </div>
+              <div style="display: inline; margin-right: auto;">
+                <%= m.win_count %>
+                -
+                <%= m.draw_count %>
+                -
+                <%= m.lose_count %>
+              </div>
+            <% else %>
+              <div style="display: inline; margin-right: auto;">
+                <%= m.matching_status %>
+              </div>
+            <% end %>
           </div>
         <% end %>
       </li>

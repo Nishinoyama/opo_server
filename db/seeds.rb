@@ -29,10 +29,12 @@ end
       wins = (n+k*2+3)%6
       loses = (n+k*7+2)%4
       draws = (n+k*8+1)%2
-      matching = Matching.create(tournament_id: m, player_id: pid, matching_status: 0)
-      MatchingResult.create!(matching_id: matching.id, player_id: oid, win_count: wins, draw_count: draws, lose_count: loses)
-      matching = Matching.create(tournament_id: m, player_id: oid, matching_status: 0)
-      MatchingResult.create!(matching_id: matching.id, player_id: pid, win_count: loses, draw_count: draws, lose_count: wins)
+      if (pid * 3 + oid * 4) % 37 == 0
+        MatchingResult.create!(tournament_id: m, player_id: pid, matching_status: 4)
+      else
+        MatchingResult.create!(tournament_id: m, player_id: pid, opponent_id: oid, matching_status: 0, win_count: wins, draw_count: draws, lose_count: loses)
+        MatchingResult.create!(tournament_id: m, player_id: oid, opponent_id: pid, matching_status: 0, win_count: loses, draw_count: draws, lose_count: wins)
+      end
     end
   end
 end

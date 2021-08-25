@@ -16,23 +16,17 @@ ActiveRecord::Schema.define(version: 2021_08_24_130454) do
   enable_extension "plpgsql"
 
   create_table "matching_results", force: :cascade do |t|
-    t.bigint "matching_id"
-    t.bigint "player_id"
+    t.bigint "tournament_id", null: false
+    t.bigint "player_id", null: false
+    t.bigint "opponent_id"
+    t.integer "matching_status", null: false
     t.integer "win_count"
     t.integer "draw_count"
     t.integer "lose_count"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["matching_id"], name: "index_matching_results_on_matching_id"
     t.index ["player_id"], name: "index_matching_results_on_player_id"
-  end
-
-  create_table "matchings", force: :cascade do |t|
-    t.bigint "tournament_id"
-    t.bigint "player_id"
-    t.integer "matching_status"
-    t.index ["player_id"], name: "index_matchings_on_player_id"
-    t.index ["tournament_id"], name: "index_matchings_on_tournament_id"
+    t.index ["tournament_id"], name: "index_matching_results_on_tournament_id"
   end
 
   create_table "player_assignments", force: :cascade do |t|
@@ -56,4 +50,7 @@ ActiveRecord::Schema.define(version: 2021_08_24_130454) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "matching_results", "players"
+  add_foreign_key "matching_results", "players", column: "opponent_id"
+  add_foreign_key "matching_results", "tournaments"
 end

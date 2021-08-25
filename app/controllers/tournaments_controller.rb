@@ -5,6 +5,6 @@ class TournamentsController < ApplicationController
   def show
     @tournament = Tournament.find(params[:id])
     @players = @tournament.players
-    @matchings = @tournament.matchings
+    @results = @tournament.matching_results
   end
 end
