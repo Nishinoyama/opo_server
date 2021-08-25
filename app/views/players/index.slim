@@ -1,0 +1,10 @@
+body
+  header
+    h1
+      | OpoServerWeb
+  section
+    ul
+      - @players.each do |p|
+        li
+          = p.name
+          = link_to "[show]", p

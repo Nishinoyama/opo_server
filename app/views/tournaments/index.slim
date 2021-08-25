@@ -1,0 +1,13 @@
+body
+  header
+    h1
+      | OpoServerWeb
+
+  section
+    h3
+      | Tournaments List
+    ul
+      - @tournaments.each do |t|
+        li
+          = t.name
+          = link_to "[show]"
