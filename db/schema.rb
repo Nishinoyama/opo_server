@@ -17,6 +17,7 @@ ActiveRecord::Schema.define(version: 2021_08_24_130454) do
 
   create_table "matching_results", force: :cascade do |t|
     t.bigint "tournament_id", null: false
+    t.integer "rounds", null: false
     t.bigint "player_id", null: false
     t.bigint "opponent_id"
     t.integer "matching_status", null: false
