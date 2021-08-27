@@ -8,18 +8,24 @@ body
     h3
       | Participants
     ul
-      - @players.each do |p|
+      - @tournament.players_sorted(@players).each do |p|
         li
           div style=("width: 240px; overflow: hidden; display: inline-flex;")
             = p.name
             = link_to "[show]", p
+          div style=("width: 120px; overflow: hidden; display: inline-flex;")
+            = p.points @tournament.id
+          div style=("width: 120px; overflow: hidden; display: inline-flex;")
+            = p.opponent_match_win_percentage(@tournament.id,@tournament.mwp_hash).round 3
+          div style=("width: 120px; overflow: hidden; display: inline-flex;")
+            = p.game_win_percentage(@tournament.id).round 3
+          div style=("width: 120px; overflow: hidden; display: inline-flex;")
+            = p.opponent_game_win_percentage(@tournament.id,@tournament.mwp_hash).round 3
           - @results.select{ |m| m.player_id == p.id }.each do |m|
-            div style=("display: inline-block; width: 120px;")
+            div style=("display: inline-block; width: 120px; background-color: #{m.result_color}")
               - if m.matching_status == 'finished'
                 div style=("display: inline; float: left; min-width: 36px; padding-right: 12px;")
-                  = "O" if m.win_count > m.lose_count
-                  = "X" if m.win_count < m.lose_count
-                  = "-" if m.win_count == m.lose_count
+                  = m.result_symbol
                   = m.opponent_id
                 div style=("display: inline; margin-right: auto;")
                   = m.win_count
