@@ -2,6 +2,7 @@ class CreateMatchingResults < ActiveRecord::Migration[5.2]
   def change
     create_table :matching_results do |t|
       t.belongs_to :tournament, foreign_key: true, null: false
+      t.integer :rounds, null: false
       t.belongs_to :player, foreign_key: true, null: false
       # TODO: Find a method to define foreign keys without `t.bigint :opponent_id`
       t.bigint :opponent_id

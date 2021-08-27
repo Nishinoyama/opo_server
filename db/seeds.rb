@@ -6,34 +6,45 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 
-10.times do |n|
+tournament_number = 3
+player_number = 60
+matching_number = 8
+
+tournament_number.times do |n|
   Tournament.create!(name: "Seeded Tournament \##{n+1}")
 end
-100.times do |n|
+player_number.times do |n|
   Player.create!(name: "Seeded Player \##{n+1}")
 end
 
-10.times do |m|
+(1..tournament_number).each do |m|
   players = []
-  100.times do |n|
+  (1..player_number).each do |n|
     if (n * m) % 11 > 2
       PlayerAssignment.create!(tournament_id: m, player_id: n)
       players.push n
     end
   end
   nn = players.length
-  nn.times do |n|
-    3.times do |k|
-      pid = players[n]
-      oid = players[(n+k+2)%nn]
-      wins = (n+k*2+3)%6
-      loses = (n+k*7+2)%4
-      draws = (n+k*8+1)%2
-      if (pid * 3 + oid * 4) % 37 == 0
-        MatchingResult.create!(tournament_id: m, player_id: pid, matching_status: 4)
-      else
-        MatchingResult.create!(tournament_id: m, player_id: pid, opponent_id: oid, matching_status: 0, win_count: wins, draw_count: draws, lose_count: loses)
-        MatchingResult.create!(tournament_id: m, player_id: oid, opponent_id: pid, matching_status: 0, win_count: loses, draw_count: draws, lose_count: wins)
+  matching_number.times do |k|
+    rng = Random.new m + k + 2718
+    shuffled_players = players.shuffle random: rng
+    # pray for no occurrence of duplication!!
+    nn.times do |n|
+      if n % 2 == 0 && n == nn - 1
+        pid = shuffled_players[n]
+        rounds = k+1
+        MatchingResult.create!(tournament_id: m, player_id: pid, rounds: rounds, matching_status: 4)
+      elsif n % 2 == 0
+        pid = shuffled_players[n]
+        rounds = k+1
+        oid = shuffled_players[n+1]
+        pid, oid = oid, pid if pid > oid
+        wins = (n+k*2+3)%6
+        loses = (n+k*7+2)%4
+        draws = (n+k*8+1)%2
+        MatchingResult.create!(tournament_id: m, player_id: pid, rounds: rounds, matching_status: 0, opponent_id: oid, win_count: wins, draw_count: draws, lose_count: loses)
+        MatchingResult.create!(tournament_id: m, player_id: oid, rounds: rounds, matching_status: 0, opponent_id: pid, win_count: loses, draw_count: draws, lose_count: wins)
       end
     end
   end
