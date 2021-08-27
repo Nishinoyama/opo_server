@@ -12,27 +12,33 @@
     Participants
   </h3>
   <ul>
-    <% @players.each do |p| %>
+    <% @tournament.players_sorted(@players).each do |p| %>
       <li>
-        <div style="width: 240px; overflow: hidden; display: inline-flex;">
+        <div style="float: left; width: 240px; overflow: hidden; display: inline-flex;">
           <%= p.name %>
           <%= link_to "[show]", p %>
         </div>
+        <div style="float: left; width: 60px;" >
+          Pts:
+          <%= p.points @tournament.id %>
+        </div>
+        <div style="float: left; width: 120px;" >
+          OMWP:
+          <%= p.opponent_match_win_percentage(@tournament.id, @tournament.mwp_hash).round 3 %>
+        </div>
+        <div style="float: left; width: 120px;" >
+          GWP:
+          <%= p.game_win_percentage(@tournament.id).round 3 %>
+        </div>
+        <div style="float: left; width: 120px;" >
+          OMWP:
+          <%= p.opponent_game_win_percentage(@tournament.id, @tournament.gwp_hash).round 3 %>
+        </div>
         <% @results.select{ |m| m.player_id == p.id }.each do |m| %>
-          <div style="display: inline-block; width: 120px;
-            <% if m.matching_status == 'finished' %>
-            background-color:
-                <%= "#c0efd3" if m.win_count > m.lose_count %>
-                <%= "#eec3c4" if m.win_count < m.lose_count %>
-                <%= "#f3e9cc" if m.win_count == m.lose_count %>
-              ;
-            <% end %>
-          ">
-            <% if m.matching_status == 'finished' %>
-              <div style="display: inline; float: left; min-width: 36px; padding-right: 12px;">
-                <%= "O" if m.win_count > m.lose_count %>
-                <%= "X" if m.win_count < m.lose_count %>
-                <%= "-" if m.win_count == m.lose_count %>
+          <div style="display: inline-block; width: 144px; background-color: <%= m.result_color %>; ">
+            <% if m.finished? %>
+              <div style="display: inline; float: left; width: 48px; padding-right: 12px; white-space: nowrap">
+                <%= m.result_symbol %>
                 <%= m.opponent_id %>
               </div>
               <div style="display: inline; margin-right: auto;">
