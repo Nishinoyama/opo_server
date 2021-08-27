@@ -19,18 +19,18 @@ class Player < ApplicationRecord
     any_percentage(results(tournament_id).select(&:finished?).map(&:match_percentage))
   end
 
-  def opponent_match_win_percentage(tournament_id, mwp_array)
+  def opponent_match_win_percentage(tournament_id, mwp_hash)
     opponents_ids = opponents tournament_id
-    any_percentage(mwp_array.select{|id, _| opponents_ids.include?(id) }.map{|_, mwp| [mwp, 1.0/3].max})
+    any_percentage(mwp_hash.select{|id, _| opponents_ids.include?(id) }.map{|_, mwp| [mwp, 1.0/3].max})
   end
 
   def game_win_percentage(tournament_id)
     any_percentage(results(tournament_id).select(&:finished?).map(&:game_percentage))
   end
 
-  def opponent_game_win_percentage(tournament_id, gwp_array)
+  def opponent_game_win_percentage(tournament_id, gwp_hash)
     opponents_ids = opponents tournament_id
-    any_percentage(gwp_array.select{|id, _| opponents_ids.include?(id) }.map{|_, gwp| gwp})
+    any_percentage(gwp_hash.select{|id, _| opponents_ids.include?(id) }.map{|_, gwp| gwp})
   end
 
   private

@@ -14,7 +14,9 @@ class Tournament < ApplicationRecord
   def players_sorted(players)
     players.sort do |a, b|
       (b.points(id) <=> a.points(id)).nonzero? ||
-        (b.opponent_match_win_percentage(id, mwp_hash) <=> a.opponent_match_win_percentage(id, mwp_hash) )
+        (b.opponent_match_win_percentage(id, mwp_hash) <=> a.opponent_match_win_percentage(id, mwp_hash) ).nonzero? ||
+          (b.game_win_percentage(id) <=> a.game_win_percentage(id) ).nonzero? ||
+            (b.opponent_game_win_percentage(id, mwp_hash) <=> a.opponent_game_win_percentage(id, mwp_hash) )
     end
   end
 
