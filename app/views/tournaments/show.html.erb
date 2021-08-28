@@ -7,6 +7,10 @@
 <section>
   <h2>
     <%= @tournament.name %>
+    <%= link_to "[edit]", edit_tournament_path(@tournament) %>
+    <%= button_to "[delete]", tournament_path(@tournament),
+                method: :delete,
+                data: { confirm: "OK?"} %>
   </h2>
   <h3>
     Participants

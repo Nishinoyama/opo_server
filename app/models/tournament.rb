@@ -1,7 +1,9 @@
 class Tournament < ApplicationRecord
-  has_many :player_assignments
+  has_many :player_assignments, dependent: :destroy
   has_many :players, through: :player_assignments
-  has_many :matching_results
+  has_many :matching_results, dependent: :destroy
+
+  validates :name, presence: true
 
   def mwp_hash
     players.map{|p| [p.id, p.match_win_percentage(id)] }.to_h

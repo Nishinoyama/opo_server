@@ -5,15 +5,24 @@
 </header>
 
 <section>
-  <h3>
+  <h2>
     Tournaments List
-  </h3>
+  </h2>
   <ul>
     <% @tournaments.each do |t| %>
       <li>
         <%= t.name %>
         <%= link_to "[show]", t %>
+        <%= button_to "[delete]", tournament_path(t),
+                    method: :delete,
+                    data: { confirm: "OK?" } %>
       </li>
     <% end %>
   </ul>
+  <h2>
+    Append New Tournament
+  </h2>
+  <p>
+    <%= link_to "[new]", new_tournament_path %>
+  </p>
 </section>

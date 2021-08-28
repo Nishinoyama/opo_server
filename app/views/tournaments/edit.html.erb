@@ -1,0 +1,25 @@
+<header>
+  <h1>
+    OpoServerWeb
+  </h1>
+</header>
+
+<section>
+  <h2>
+    <%= @tournament.name %>
+  </h2>
+  <h2>
+    Edit Tournament
+  </h2>
+  <%= form_with model: @tournament do |form| %>
+    <div>
+      <%= form.label :name %>
+    </div>
+    <div>
+      <%= form.text_field :name %>
+    </div>
+    <div>
+      <%= form.submit %>
+    </div>
+  <% end %>
+</section>
