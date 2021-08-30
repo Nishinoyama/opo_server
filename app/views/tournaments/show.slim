@@ -5,23 +5,40 @@ body
   section
     h2
       = @tournament.name
+      = link_to "[edit]", edit_tournament_path(@tournament)
     h3
       | Participants
     ul
-      - @tournament.players_sorted(@players).each do |p|
+      li
+        div style=("width: 240px; overflow: hidden; display: inline-flex;")
+          | Name
+        div style=("width: 120px; overflow: hidden; display: inline-flex;")
+          | Pts:
+        div style=("width: 120px; overflow: hidden; display: inline-flex;")
+          | O-MWP:
+        div style=("width: 120px; overflow: hidden; display: inline-flex;")
+          | GWP:
+        div style=("width: 120px; overflow: hidden; display: inline-flex;")
+          | O-GWP:
+        div style=("display: inline-block; width: 120px;")
+          | R
+      - @tournament.players_sorted.each do |player_status|
+        - p = player_status[:player]
+        - s = player_status[:score]
+        - r = player_status[:results]
         li
           div style=("width: 240px; overflow: hidden; display: inline-flex;")
             = p.name
             = link_to "[show]", p
           div style=("width: 120px; overflow: hidden; display: inline-flex;")
-            = p.points @tournament.id
+            = s[:points]
           div style=("width: 120px; overflow: hidden; display: inline-flex;")
-            = p.opponent_match_win_percentage(@tournament.id,@tournament.mwp_hash).round 3
+            = s[:omwp].round 3
           div style=("width: 120px; overflow: hidden; display: inline-flex;")
-            = p.game_win_percentage(@tournament.id).round 3
+            = s[:gwp].round 3
           div style=("width: 120px; overflow: hidden; display: inline-flex;")
-            = p.opponent_game_win_percentage(@tournament.id,@tournament.mwp_hash).round 3
-          - @results.select{ |m| m.player_id == p.id }.each do |m|
+            = s[:ogwp].round 3
+          - r.each do |m|
             div style=("display: inline-block; width: 120px; background-color: #{m.result_color}")
               - if m.matching_status == 'finished'
                 div style=("display: inline; float: left; min-width: 36px; padding-right: 12px;")

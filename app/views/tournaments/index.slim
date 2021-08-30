@@ -4,10 +4,14 @@ body
       | OpoServerWeb
 
   section
-    h3
+    h2
       | Tournaments List
     ul
       - @tournaments.each do |t|
         li
           = t.name
           = link_to "[show]", t
+    h2
+      | Append Tournament
+    p
+      = link_to "[new]", new_tournament_path
