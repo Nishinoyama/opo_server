@@ -16,7 +16,10 @@
     Participants
   </h3>
   <ul>
-    <% @tournament.players_sorted.each do |p| %>
+    <% @tournament.players_sorted.each do |ps| %>
+      <% p = ps[:player] %>
+      <% s = ps[:score] %>
+      <% r = ps[:results] %>
       <li>
         <div style="float: left; width: 240px; overflow: hidden; display: inline-flex;">
           <%= p.name %>
@@ -24,21 +27,21 @@
         </div>
         <div style="float: left; width: 60px;" >
           Pts:
-          <%= p.points @tournament.id %>
+          <%= s[:points] %>
         </div>
         <div style="float: left; width: 120px;" >
           OMWP:
-          <%= p.opponent_match_win_percentage(@tournament.id, @tournament.mwp_hash).round 3 %>
+          <%= s[:omwp].round 3 %>
         </div>
         <div style="float: left; width: 120px;" >
           GWP:
-          <%= p.game_win_percentage(@tournament.id).round 3 %>
+          <%= s[:gwp].round 3 %>
         </div>
         <div style="float: left; width: 120px;" >
           OMWP:
-          <%= p.opponent_game_win_percentage(@tournament.id, @tournament.gwp_hash).round 3 %>
+          <%= s[:ogwp].round 3 %>
         </div>
-        <% @results.select{ |m| m.player_id == p.id }.each do |m| %>
+        <% r.each do |m| %>
           <div style="display: inline-block; width: 144px; background-color: <%= m.result_color %>; ">
             <% if m.finished? %>
               <div style="display: inline; float: left; width: 48px; padding-right: 12px; white-space: nowrap">

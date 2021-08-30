@@ -5,21 +5,59 @@ class Tournament < ApplicationRecord
 
   validates :name, presence: true
 
-  def mwp_hash
-    players.map{|p| [p.id, p.match_win_percentage(id)] }.to_h
+  def results_separated_by_player
+    results_by_player = players.map { |p| [p.id, []] }.to_h
+    matching_results.each { |m| results_by_player[m.player_id].push(m) }
+    results_by_player
   end
 
-  def gwp_hash
-    players.map{|p| [p.id, p.game_win_percentage(id)] }.to_h
+  def players_win_percentages
+    results_by_player = results_separated_by_player
+
+    mwp_hash = results_by_player.map do |pid, results|
+      [pid, any_percentage(results.select(&:finished?).map(&:match_percentage))]
+    end.to_h
+    gwp_hash = results_by_player.map do |pid, results|
+      [pid, any_percentage(results.select(&:finished?).map(&:game_percentage))]
+    end.to_h
+    players_opponents_hash = results_by_player.map do |pid, results|
+      [pid, results.select(&:finished?).map(&:opponent_id)]
+    end.to_h
+
+    results_by_player.map do |pid, results|
+      [pid, {
+        points: results.map(&:points).sum,
+        mwp: mwp_hash[pid],
+        omwp: any_percentage(players_opponents_hash[pid].map { |oid| mwp_hash[oid] }),
+        gwp: gwp_hash[pid],
+        ogwp: any_percentage(players_opponents_hash[pid].map { |oid| gwp_hash[oid] }),
+      }]
+    end.to_h
   end
 
   def players_sorted
-    players.sort do |a, b|
-      (b.points(id) <=> a.points(id)).nonzero? ||
-        (b.opponent_match_win_percentage(id, mwp_hash) <=> a.opponent_match_win_percentage(id, mwp_hash) ).nonzero? ||
-          (b.game_win_percentage(id) <=> a.game_win_percentage(id) ).nonzero? ||
-            (b.opponent_game_win_percentage(id, mwp_hash) <=> a.opponent_game_win_percentage(id, mwp_hash) )
+    scores = players_win_percentages
+    players_results = results_separated_by_player
+    scored_players = players.map do |player|
+      {
+        player: player,
+        score: scores[player.id],
+        results: players_results[player.id]
+      }
     end
+    scored_players.sort do |a, b|
+      as, bs = a[:score], b[:score]
+      (bs[:points] <=> as[:points]).nonzero? ||
+        (bs[:omwp] <=> as[:omwp]).nonzero? ||
+          (bs[:gwp] <=> as[:gwp]).nonzero? ||
+            (bs[:ogwp] <=> as[:ogwp])
+    end
+  end
+
+  private
+  def any_percentage(points_array)
+    return 0.0 if points_array.length == 0
+    points_array.sum / points_array.length
   end
 
 end
