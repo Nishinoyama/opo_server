@@ -16,7 +16,7 @@
     Participants
   </h3>
   <ul>
-    <% @tournament.players_sorted(@players).each do |p| %>
+    <% @tournament.players_sorted.each do |p| %>
       <li>
         <div style="float: left; width: 240px; overflow: hidden; display: inline-flex;">
           <%= p.name %>

@@ -13,7 +13,7 @@ class Tournament < ApplicationRecord
     players.map{|p| [p.id, p.game_win_percentage(id)] }.to_h
   end
 
-  def players_sorted(players)
+  def players_sorted
     players.sort do |a, b|
       (b.points(id) <=> a.points(id)).nonzero? ||
         (b.opponent_match_win_percentage(id, mwp_hash) <=> a.opponent_match_win_percentage(id, mwp_hash) ).nonzero? ||
