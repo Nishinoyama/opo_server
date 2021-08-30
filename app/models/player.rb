@@ -33,6 +33,15 @@ class Player < ApplicationRecord
     any_percentage(gwp_hash.select{|id, _| opponents_ids.include?(id) }.map{|_, gwp| gwp})
   end
 
+  def scoring(tournament_id, mwp_hash, gwp_hash)
+    {
+      mwp: match_win_percentage(tournament_id),
+      omwp: opponent_match_win_percentage(tournament_id, mwp_hash),
+      gwp: game_win_percentage(tournament_id),
+      ogwp: opponent_game_win_percentage(tournament_id, gwp_hash),
+    }
+  end
+
   private
   def any_percentage(points_array)
     return 0.0 if points_array.length == 0

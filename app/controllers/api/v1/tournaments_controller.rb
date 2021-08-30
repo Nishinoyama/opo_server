@@ -15,4 +15,16 @@ class Api::V1::TournamentsController < ApiController
     matching_results = Tournament.find(params[:tournament_id]).matching_results
     render json: matching_results
   end
+  def standing
+    tournament = Tournament.find(params[:tournament_id])
+    players_standing = tournament.players_sorted
+    players_status = players_standing.map do |player|
+      {
+        player: player,
+        scoring: player.scoring(tournament.id, tournament.mwp_hash, tournament.gwp_hash),
+        results: player.results(tournament.id),
+      }
+    end
+    render json: players_status
+  end
 end
