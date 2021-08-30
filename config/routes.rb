@@ -6,7 +6,7 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       resources :tournaments, only: [:index, :show] do
-        get 'players', 'matching_results'
+        get 'players', 'matching_results', 'standing'
       end
       resources :players, only: [:index, :show]
     end
