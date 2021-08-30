@@ -1,0 +1,16 @@
+body
+  header
+    h1
+      | OpoServerWeb
+  section
+    h2
+      = @tournament.name
+    h2
+      | Edit Tournament
+    = form_with model: @tournament do |form|
+      div
+        = form.label :name
+      div
+        = form.text_field :name
+      div
+        = form.submit

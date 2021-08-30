@@ -17,6 +17,7 @@ ActiveRecord::Schema.define(version: 2021_08_24_130454) do
 
   create_table "matching_results", force: :cascade do |t|
     t.bigint "tournament_id", null: false
+    t.integer "rounds", null: false
     t.bigint "player_id", null: false
     t.bigint "opponent_id"
     t.integer "matching_status", null: false
@@ -39,13 +40,13 @@ ActiveRecord::Schema.define(version: 2021_08_24_130454) do
   end
 
   create_table "players", force: :cascade do |t|
-    t.string "name"
+    t.string "name", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
   create_table "tournaments", force: :cascade do |t|
-    t.string "name"
+    t.string "name", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -53,4 +54,6 @@ ActiveRecord::Schema.define(version: 2021_08_24_130454) do
   add_foreign_key "matching_results", "players"
   add_foreign_key "matching_results", "players", column: "opponent_id"
   add_foreign_key "matching_results", "tournaments"
+  add_foreign_key "player_assignments", "players"
+  add_foreign_key "player_assignments", "tournaments"
 end

@@ -1,0 +1,55 @@
+body
+  header
+    h1
+      | OpoServerWeb
+  section
+    h2
+      = @tournament.name
+      = link_to "[edit]", edit_tournament_path(@tournament)
+    h3
+      | Participants
+    ul
+      li
+        div style=("width: 240px; overflow: hidden; display: inline-flex;")
+          | Name
+        div style=("width: 120px; overflow: hidden; display: inline-flex;")
+          | Pts:
+        div style=("width: 120px; overflow: hidden; display: inline-flex;")
+          | O-MWP:
+        div style=("width: 120px; overflow: hidden; display: inline-flex;")
+          | GWP:
+        div style=("width: 120px; overflow: hidden; display: inline-flex;")
+          | O-GWP:
+        div style=("display: inline-block; width: 120px;")
+          | R
+      - @tournament.players_sorted.each do |player_status|
+        - p = player_status[:player]
+        - s = player_status[:score]
+        - r = player_status[:results]
+        li
+          div style=("width: 240px; overflow: hidden; display: inline-flex;")
+            = p.name
+            = link_to "[show]", p
+          div style=("width: 120px; overflow: hidden; display: inline-flex;")
+            = s[:points]
+          div style=("width: 120px; overflow: hidden; display: inline-flex;")
+            = s[:omwp].round 3
+          div style=("width: 120px; overflow: hidden; display: inline-flex;")
+            = s[:gwp].round 3
+          div style=("width: 120px; overflow: hidden; display: inline-flex;")
+            = s[:ogwp].round 3
+          - r.each do |m|
+            div style=("display: inline-block; width: 120px; background-color: #{m.result_color}")
+              - if m.matching_status == 'finished'
+                div style=("display: inline; float: left; min-width: 36px; padding-right: 12px;")
+                  = m.result_symbol
+                  = m.opponent_id
+                div style=("display: inline; margin-right: auto;")
+                  = m.win_count
+                  | -
+                  = m.draw_count
+                  | -
+                  = m.lose_count
+              - else
+                div style=("display: inline; margin-right: auto;")
+                  = m.matching_status
