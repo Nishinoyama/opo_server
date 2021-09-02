@@ -11,10 +11,14 @@ RUN apk --update --no-cache add \
   postgresql-dev \
   tzdata \
   less \
-  libidn-dev
+  cargo
 
 COPY Gemfile* ./
 RUN bundle install
+
+COPY opo2 opo2
+RUN cargo install --path ./opo2 --root /
+
 COPY . .
 
 EXPOSE 3000

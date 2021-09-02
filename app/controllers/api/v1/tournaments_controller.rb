@@ -19,4 +19,15 @@ class Api::V1::TournamentsController < ApiController
     tournament = Tournament.find(params[:tournament_id])
     render json: tournament.players_sorted
   end
+  def build
+    tournament = Tournament.find(params[:tournament_id])
+    time = Time.now.strftime("%Y%m%d%H%M%S%N")
+    data_json = "#{time}.json"
+    f = File.new(data_json, "w")
+    f.write(tournament.players_sorted.to_json)
+    render_data = `matching_builder_from_json #{data_json}`
+    f.close
+    File.unlink(data_json)
+    render json: render_data
+  end
 end
