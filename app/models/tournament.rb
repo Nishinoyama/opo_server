@@ -28,7 +28,7 @@ class Tournament < ApplicationRecord
       [pid, {
         points: results.map(&:points).sum,
         mwp: mwp_hash[pid],
-        omwp: any_percentage(players_opponents_hash[pid].map { |oid| mwp_hash[oid] }),
+        omwp: any_percentage(players_opponents_hash[pid].map { |oid| [mwp_hash[oid], 1.0/3.0].max }),
         gwp: gwp_hash[pid],
         ogwp: any_percentage(players_opponents_hash[pid].map { |oid| gwp_hash[oid] }),
       }]
